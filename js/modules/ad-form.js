@@ -58,6 +58,39 @@ function guestsInRoomsErrorMessage() {
 pristine.addValidator(roomsField, validateGuestsINRooms, guestsInRoomsErrorMessage);
 pristine.addValidator(guestsField, validateGuestsINRooms, guestsInRoomsErrorMessage);
 
+const typeHomeSelect = adForm.querySelector('[name="type"]');
+const priceField = adForm.querySelector('#price');
+const minPrice = {
+  'bungalow': 0,
+  'flat': 1000,
+  'hotel': 3000,
+  'house': 5000,
+  'palace': 10000
+};
+
+function validatePrice(value) {
+  return value.length && Number(value) >= minPrice[typeHomeSelect.value];
+}
+
+function priceErrorMessage() {
+  return `Для ${typeHomeSelect.value}, минимальная цена - ${minPrice[typeHomeSelect.value]} руб.`;
+}
+
+pristine.addValidator(priceField, validatePrice, priceErrorMessage);
+
+const timeinSelect = adForm.querySelector('#timein');
+const timeoutSelect = adForm.querySelector('#timeout');
+
+timeinSelect.addEventListener('change', () => {
+  const timeoutSelectOption = timeoutSelect.querySelector(`[value="${timeinSelect.value}"]`);
+  timeoutSelectOption.selected = true;
+});
+
+timeoutSelect.addEventListener('change', () => {
+  const timeinSelectOption = timeinSelect.querySelector(`[value="${timeoutSelect.value}"]`);
+  timeinSelectOption.selected = true;
+});
+
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
