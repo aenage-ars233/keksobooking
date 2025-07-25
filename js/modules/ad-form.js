@@ -76,6 +76,10 @@ function priceErrorMessage() {
   return `Для ${typeHomeSelect.value}, минимальная цена - ${minPrice[typeHomeSelect.value]} руб.`;
 }
 
+typeHomeSelect.addEventListener('change', () => {
+  priceField.placeholder = minPrice[typeHomeSelect.value];
+});
+
 pristine.addValidator(priceField, validatePrice, priceErrorMessage);
 
 const timeinSelect = adForm.querySelector('#timein');
