@@ -1,6 +1,10 @@
 const adForm = document.querySelector('.ad-form');
 const roomsSelect = adForm.querySelector('#room_number');
 const capacitySelect = adForm.querySelector('#capacity');
+const typeHomeSelect = adForm.querySelector('#type');
+const priceField = adForm.querySelector('#price');
+const checkinSelect = adForm.querySelector('#timein');
+const checkoutSelect = adForm.querySelector('#timeout');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -34,6 +38,62 @@ function getRoomsCapacityMessage() {
 
 pristine.addValidator(roomsSelect, validateRooms, getRoomsCapacityMessage);
 pristine.addValidator(capacitySelect, validateCapacity, getRoomsCapacityMessage);
+
+/* Тип жилья */
+
+let minPrice = 1000;
+
+typeHomeSelect.addEventListener('change', () => {
+  switch (typeHomeSelect.value) {
+    case 'bungalow':
+      priceField.min = 0;
+      priceField.placeholder = '0';
+      minPrice = 0;
+      break;
+    case 'flat':
+      priceField.min = 1000;
+      priceField.placeholder = '1000';
+      minPrice = 1000;
+      break;
+    case 'hotel':
+      priceField.min = 3000;
+      priceField.placeholder = '3000';
+      minPrice = 3000;
+      break;
+    case 'house':
+      priceField.min = 5000;
+      priceField.placeholder = '5000';
+      minPrice = 5000;
+      break;
+    case 'palace':
+      priceField.min = 10000;
+      priceField.placeholder = '10000';
+      minPrice = 10000;
+      break;
+  }
+});
+
+function validatePrice(value) {
+  return Number(value) >= Number(minPrice);
+}
+
+function getMinPriceMessage() {
+  return `Минимум ${minPrice} рублей!`;
+}
+
+pristine.addValidator(priceField, validatePrice, getMinPriceMessage);
+
+/* Время заезда и выезда */
+
+checkinSelect.addEventListener('change', () => {
+  const similarOption = checkoutSelect.querySelector(`[value="${checkinSelect.value}"]`);
+  similarOption.selected = true;
+});
+
+checkoutSelect.addEventListener('change', () => {
+  const similarOption = checkinSelect.querySelector(`[value="${checkoutSelect.value}"]`);
+  similarOption.selected = true;
+});
 
 // Отправка формы
 adForm.addEventListener('submit', (evt) => {
