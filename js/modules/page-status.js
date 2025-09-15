@@ -1,8 +1,10 @@
 const adForm = document.querySelector('.ad-form');
 const mapFiltersForm = document.querySelector('.map__filters');
+const sliderElement = adForm.querySelector('.ad-form__slider');
 
 function toInActiveStatus() {
   adForm.classList.add('ad-form--disabled');
+  sliderElement.setAttribute('disabled', true);
   const fieldsets = adForm.querySelectorAll('fieldset');
   fieldsets.forEach((fieldset) => {
     fieldset.disabled = true;
@@ -17,6 +19,7 @@ toInActiveStatus();
 
 function toActiveStatus() {
   adForm.classList.remove('ad-form--disabled');
+  sliderElement.removeAttribute('disabled');
   const fieldsets = adForm.querySelectorAll('fieldset');
   fieldsets.forEach((fieldset) => {
     fieldset.disabled = false;
@@ -27,6 +30,5 @@ function toActiveStatus() {
     input.disabled = false;
   });
 }
-toActiveStatus();
 
 export {toActiveStatus};

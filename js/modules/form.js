@@ -5,6 +5,7 @@ const typeHomeSelect = adForm.querySelector('#type');
 const priceField = adForm.querySelector('#price');
 const checkinSelect = adForm.querySelector('#timein');
 const checkoutSelect = adForm.querySelector('#timeout');
+const sliderElement = adForm.querySelector('.ad-form__slider');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -49,26 +50,56 @@ typeHomeSelect.addEventListener('change', () => {
       priceField.min = 0;
       priceField.placeholder = '0';
       minPrice = 0;
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: minPrice,
+          max: 100000,
+        },
+      });
       break;
     case 'flat':
       priceField.min = 1000;
       priceField.placeholder = '1000';
       minPrice = 1000;
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: minPrice,
+          max: 100000,
+        },
+      });
       break;
     case 'hotel':
       priceField.min = 3000;
       priceField.placeholder = '3000';
       minPrice = 3000;
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: minPrice,
+          max: 100000,
+        },
+      });
       break;
     case 'house':
       priceField.min = 5000;
       priceField.placeholder = '5000';
       minPrice = 5000;
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: minPrice,
+          max: 100000,
+        },
+      });
       break;
     case 'palace':
       priceField.min = 10000;
       priceField.placeholder = '10000';
       minPrice = 10000;
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: minPrice,
+          max: 100000,
+        },
+      });
       break;
   }
 });
@@ -93,6 +124,32 @@ checkinSelect.addEventListener('change', () => {
 checkoutSelect.addEventListener('change', () => {
   const similarOption = checkinSelect.querySelector(`[value="${checkoutSelect.value}"]`);
   similarOption.selected = true;
+});
+
+/* Слайдер и цена */
+
+priceField.value = 1000;
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 1000,
+    max: 100000,
+  },
+  start: 1000,
+  step: 1,
+  connect: 'lower',
+  format: {
+    to: function(value) {
+      return value.toFixed(0);
+    },
+    from: function(value) {
+      return Number(value);
+    }
+  },
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  priceField.value = sliderElement.noUiSlider.get();
 });
 
 // Отправка формы
