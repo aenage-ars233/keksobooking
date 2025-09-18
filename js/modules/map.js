@@ -67,18 +67,20 @@ function createOffer({author, offer}) {
   card.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   card.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
   card.querySelector('.popup__description').textContent = offer.description;
+
+  const featuresContainer = card.querySelector('.popup__features');
+  featuresContainer.textContent = '';
   if (Object.hasOwn(offer, 'features')) {
-    const featureItems = card.querySelectorAll('.popup__feature');
-    featureItems.forEach((featureItem) => {
-      const classString = featureItem.classList[1].slice(16);
-      if (!offer.features.includes(classString)) {
-        featureItem.remove();
-      }
+    offer.features.forEach((feature) => {
+      const featureElement = document.createElement('li');
+      featureElement.classList.add('popup__feature', `popup__feature--${feature}`);
+      featuresContainer.append(featureElement);
     });
   }
+
+  const photosContainer = cardTemplate.querySelector('.popup__photos');
+  photosContainer.textContent = '';
   if (Object.hasOwn(offer, 'photos')) {
-    const photosContainer = cardTemplate.querySelector('.popup__photos');
-    photosContainer.textContent = '';
     for (let i = 0; i < offer.photos.length; i++) {
       const photoElement = document.createElement('img');
       photoElement.classList.add('popup__photo');
