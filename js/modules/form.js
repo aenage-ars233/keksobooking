@@ -1,3 +1,6 @@
+import { sendData } from './api.js';
+import { resetMap } from './map.js';
+
 const adForm = document.querySelector('.ad-form');
 const roomsSelect = adForm.querySelector('#room_number');
 const capacitySelect = adForm.querySelector('#capacity');
@@ -6,6 +9,7 @@ const priceField = adForm.querySelector('#price');
 const checkinSelect = adForm.querySelector('#timein');
 const checkoutSelect = adForm.querySelector('#timeout');
 const sliderElement = adForm.querySelector('.ad-form__slider');
+const submitButton = adForm.querySelector('.ad-form__submit');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -153,7 +157,42 @@ sliderElement.noUiSlider.on('update', () => {
 });
 
 // Отправка формы
+
+function onSuccessSubmit() {
+  adForm.reset();
+  submitButton.disabled = false;
+  resetMap();
+  const successModal = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
+  document.body.append(successModal);
+  successModal.addEventListener('click', () => {
+    successModal.remove();
+  });
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      successModal.remove();
+    }
+  });
+}
+
+function onErrorSubmit() {
+  submitButton.disabled = false;
+  const errorModal = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
+  document.body.append(errorModal);
+  errorModal.addEventListener('click', () => {
+    errorModal.remove();
+  });
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      errorModal.remove();
+    }
+  });
+}
+
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  if (pristine.validate()) {
+    submitButton.disabled = true;
+    const formData = new FormData(adForm);
+    sendData(onSuccessSubmit, onErrorSubmit, formData);
+  }
 });

@@ -112,4 +112,18 @@ function renderOffers(offers) {
   toActiveStatus();
 }
 
-export {renderOffers};
+/* Сброс */
+
+function resetMap() {
+  map.setView({
+    lat: 35.82,
+    lng: 139.76,
+  }, 10);
+  mainMarker.setLatLng({
+    lat: 35.82,
+    lng: 139.76
+  });
+  addressField.value = '35.82, 139.76';
+}
+
+export {renderOffers, resetMap};
