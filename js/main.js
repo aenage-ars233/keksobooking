@@ -1,5 +1,10 @@
-import { getOffers } from './modules/data.js';
+import { getData } from './modules/api.js';
+import { showAlert } from './modules/util.js';
 import { renderOffers } from './modules/map.js';
 import './modules/form.js';
 
-renderOffers(getOffers());
+getData((offers) => {
+  renderOffers(offers);
+}, (errorMessage) => {
+  showAlert(errorMessage);
+});

@@ -5,9 +5,6 @@ const addressField = document.querySelector('#address');
 
 /* Загрузка и инициализация карты */
 const map = L.map('map-canvas');
-map.on('load', () => {
-  toActiveStatus();
-});
 map.setView({
   lat: 35.82,
   lng: 139.76,
@@ -70,22 +67,26 @@ function createOffer({author, offer}) {
   card.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   card.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
   card.querySelector('.popup__description').textContent = offer.description;
-  const featureItems = card.querySelectorAll('.popup__feature');
-  featureItems.forEach((featureItem) => {
-    const classString = featureItem.classList[1].slice(16);
-    if (!offer.features.includes(classString)) {
-      featureItem.remove();
+  if (Object.hasOwn(offer, 'features')) {
+    const featureItems = card.querySelectorAll('.popup__feature');
+    featureItems.forEach((featureItem) => {
+      const classString = featureItem.classList[1].slice(16);
+      if (!offer.features.includes(classString)) {
+        featureItem.remove();
+      }
+    });
+  }
+  if (Object.hasOwn(offer, 'photos')) {
+    const photosContainer = cardTemplate.querySelector('.popup__photos');
+    photosContainer.textContent = '';
+    for (let i = 0; i < offer.photos.length; i++) {
+      const photoElement = document.createElement('img');
+      photoElement.classList.add('popup__photo');
+      photoElement.src = offer.photos[i];
+      photoElement.width = 45;
+      photoElement.height = 40;
+      photosContainer.append(photoElement);
     }
-  });
-  const photosContainer = cardTemplate.querySelector('.popup__photos');
-  photosContainer.textContent = '';
-  for (let i = 0; i < offer.photos.length; i++) {
-    const photoElement = document.createElement('img');
-    photoElement.classList.add('popup__photo');
-    photoElement.src = offer.photos[i];
-    photoElement.width = 45;
-    photoElement.height = 40;
-    photosContainer.append(photoElement);
   }
 
   return card;
@@ -106,6 +107,7 @@ function renderOffers(offers) {
     const offerElement = createOffer(offer);
     marker.bindPopup(offerElement);
   });
+  toActiveStatus();
 }
 
 export {renderOffers};
