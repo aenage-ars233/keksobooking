@@ -15,6 +15,7 @@ const photoField = adForm.querySelector('#images');
 const photoContainer = adForm.querySelector('.ad-form__photo');
 const sliderElement = adForm.querySelector('.ad-form__slider');
 const submitButton = adForm.querySelector('.ad-form__submit');
+const resetButton = adForm.querySelector('.ad-form__reset');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -228,4 +229,8 @@ adForm.addEventListener('submit', (evt) => {
     const formData = new FormData(adForm);
     sendData(onSuccessSubmit, onErrorSubmit, formData);
   }
+});
+
+resetButton.addEventListener('click', () => {
+  resetMap();
 });
