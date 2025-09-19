@@ -1,10 +1,10 @@
 import { getData } from './modules/api.js';
 import { showAlert } from './modules/util.js';
-import { renderOffers } from './modules/map.js';
+import { startFilters } from './modules/map-filters.js';
 import './modules/form.js';
 
 getData((offers) => {
-  renderOffers(offers);
+  startFilters(offers);
 }, (errorMessage) => {
   showAlert(errorMessage);
 });
