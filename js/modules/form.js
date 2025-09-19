@@ -1,13 +1,18 @@
 import { sendData } from './api.js';
 import { resetMap } from './map.js';
 
+const FILE_TYPES = ['jpeg', 'jpg', 'png'];
+
 const adForm = document.querySelector('.ad-form');
+const avatarField = adForm.querySelector('#avatar');
 const roomsSelect = adForm.querySelector('#room_number');
 const capacitySelect = adForm.querySelector('#capacity');
 const typeHomeSelect = adForm.querySelector('#type');
 const priceField = adForm.querySelector('#price');
 const checkinSelect = adForm.querySelector('#timein');
 const checkoutSelect = adForm.querySelector('#timeout');
+const photoField = adForm.querySelector('#images');
+const photoContainer = adForm.querySelector('.ad-form__photo');
 const sliderElement = adForm.querySelector('.ad-form__slider');
 const submitButton = adForm.querySelector('.ad-form__submit');
 
@@ -15,6 +20,17 @@ const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element',
   errorTextClass: 'ad-form__element--error'
+});
+
+/* Аватарка */
+const avatarPreview = adForm.querySelector('.ad-form-header__preview img');
+avatarField.addEventListener('change', () => {
+  const file = avatarField.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches) {
+    avatarPreview.src = URL.createObjectURL(file);
+  }
 });
 
 /* Количество комнат и мест */
@@ -154,6 +170,23 @@ noUiSlider.create(sliderElement, {
 
 sliderElement.noUiSlider.on('update', () => {
   priceField.value = sliderElement.noUiSlider.get();
+});
+
+/* Фото жилья */
+let photosCounter = 0;
+photoField.addEventListener('change', () => {
+  const file = photoField.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches && photosCounter < 1) {
+    const photoPreview = document.createElement('img');
+    photoPreview.src = URL.createObjectURL(file);
+    photoPreview.alt = '';
+    photoPreview.width = '70';
+    photoPreview.height = '70';
+    photoContainer.append(photoPreview);
+    photosCounter++;
+  }
 });
 
 // Отправка формы
